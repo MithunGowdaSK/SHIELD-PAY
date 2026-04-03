@@ -1,26 +1,20 @@
 import express from "express";
-import upload from "../middleware/upload.js";
 import User from "../models/User.js";
 
 const router = express.Router();
 
-router.post("/", upload.single("file"), async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { platform, workerId, phone, latitude, longitude } = req.body;
 
     console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
 
     // ✅ VALIDATION
-    if (!phone) {
-      return res.status(400).json({ message: "Phone missing ❌" });
+    if (!phone || !platform || !workerId) {
+      return res.status(400).json({ message: "Missing fields ❌" });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ message: "File missing ❌" });
-    }
-
-    // ✅ AUTO CREATE USER (BEST)
+    // ✅ AUTO CREATE USER
     let user = await User.findOne({ phone });
 
     if (!user) {
@@ -33,14 +27,13 @@ router.post("/", upload.single("file"), async (req, res) => {
     // ✅ UPDATE DATA
     user.platform = platform;
     user.workerId = workerId;
-    user.idProof = req.file.filename;
 
     if (latitude && longitude) {
-  user.location = {
-    latitude: Number(latitude),
-    longitude: Number(longitude),
-  };
-}
+      user.location = {
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+      };
+    }
 
     await user.save();
 
@@ -49,9 +42,9 @@ router.post("/", upload.single("file"), async (req, res) => {
     });
 
   } catch (err) {
-    console.error("UPLOAD ERROR:", err);
+    console.error("ERROR:", err);
     res.status(500).json({
-      message: "Upload failed ❌",
+      message: "Server error ❌",
     });
   }
 });
