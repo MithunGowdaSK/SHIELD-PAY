@@ -224,7 +224,7 @@ db.users.findOne(
 
 ### Issue: "User not found after registration"
 **Solution:**
-- Check network tab - POST to `/api/users/register` should return 200
+- Check network tab - POST to `${import.meta.env.VITE_API_URL}/api/users/register` should return 200
 - Check MongoDB directly if document was created
 - Check browser console for errors
 - Try clearing cache and retrying

@@ -59,7 +59,7 @@
 ```
 User is in Orders page
 1. Adds order: ORD123 for ₹450
-2. API: POST /api/users/9999999999/orders
+2. API: POST ${import.meta.env.VITE_API_URL}/api/users/9999999999/orders
 3. MongoDB: Order added to user's orders array ✅
 4. User sees order in list
 5. Data persists in MongoDB forever
@@ -132,27 +132,27 @@ Each user document contains:
 
 ### User Management
 ```
-POST   /api/users/register              Register new user or load existing
-GET    /api/users/phone/:phone          Get user by phone number
-PUT    /api/users/:phone                Update user profile
+POST   ${import.meta.env.VITE_API_URL}/api/users/register              Register new user or load existing
+GET    ${import.meta.env.VITE_API_URL}/api/users/phone/:phone          Get user by phone number
+PUT    ${import.meta.env.VITE_API_URL}/api/users/:phone                Update user profile
 ```
 
 ### Orders
 ```
-POST   /api/users/:phone/orders         Add new order
-GET    /api/users/:phone/orders         Get all user orders
+POST   ${import.meta.env.VITE_API_URL}/api/users/:phone/orders         Add new order
+GET    ${import.meta.env.VITE_API_URL}/api/users/:phone/orders         Get all user orders
 ```
 
 ### Payouts
 ```
-POST   /api/users/:phone/payouts        Record new payout
-GET    /api/users/:phone/payouts        Get all payouts
+POST   ${import.meta.env.VITE_API_URL}/api/users/:phone/payouts        Record new payout
+GET    ${import.meta.env.VITE_API_URL}/api/users/:phone/payouts        Get all payouts
 ```
 
 ### Plan & Wallet
 ```
-POST   /api/users/:phone/plan           Update subscription plan
-POST   /api/users/:phone/wallet         Update wallet balance
+POST   ${import.meta.env.VITE_API_URL}/api/users/:phone/plan           Update subscription plan
+POST   ${import.meta.env.VITE_API_URL}/api/users/:phone/wallet         Update wallet balance
 ```
 
 ---
@@ -277,7 +277,7 @@ Phone verified → Check MongoDB
     
 User Adds Order
     ↓
-POST /api/users/:phone/orders
+POST ${import.meta.env.VITE_API_URL}/api/users/:phone/orders
     ↓
 MongoDB: $push order to array ✅
     ↓

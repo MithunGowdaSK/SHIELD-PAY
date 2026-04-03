@@ -23,21 +23,21 @@
 ## 🔌 Backend API Endpoints
 
 ### User Management
-- [x] `POST /api/users/register` - Register or check existing user
-- [x] `GET /api/users/phone/:phone` - Get user by phone
-- [x] `PUT /api/users/:phone` - Update user profile
+- [x] `POST ${import.meta.env.VITE_API_URL}/api/users/register` - Register or check existing user
+- [x] `GET ${import.meta.env.VITE_API_URL}/api/users/phone/:phone` - Get user by phone
+- [x] `PUT ${import.meta.env.VITE_API_URL}/api/users/:phone` - Update user profile
 
 ### Orders
-- [x] `POST /api/users/:phone/orders` - Add order
-- [x] `GET /api/users/:phone/orders` - Get all orders
+- [x] `POST ${import.meta.env.VITE_API_URL}/api/users/:phone/orders` - Add order
+- [x] `GET ${import.meta.env.VITE_API_URL}/api/users/:phone/orders` - Get all orders
 
 ### Payouts
-- [x] `POST /api/users/:phone/payouts` - Add payout
-- [x] `GET /api/users/:phone/payouts` - Get all payouts
+- [x] `POST ${import.meta.env.VITE_API_URL}/api/users/:phone/payouts` - Add payout
+- [x] `GET ${import.meta.env.VITE_API_URL}/api/users/:phone/payouts` - Get all payouts
 
 ### Plans & Wallet
-- [x] `POST /api/users/:phone/plan` - Update plan
-- [x] `POST /api/users/:phone/wallet` - Update wallet
+- [x] `POST ${import.meta.env.VITE_API_URL}/api/users/:phone/plan` - Update plan
+- [x] `POST ${import.meta.env.VITE_API_URL}/api/users/:phone/wallet` - Update wallet
 
 ### Total Endpoints
 - [x] 10+ endpoints implemented and tested

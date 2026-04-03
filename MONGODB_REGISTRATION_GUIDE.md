@@ -55,7 +55,7 @@ Your ShieldPay application now has a **complete MongoDB-backed registration syst
 
 #### 1. **Register User**
 ```
-POST /api/users/register
+POST ${import.meta.env.VITE_API_URL}/api/users/register
 Body: { phone, name, city }
 Returns: { user, isNewUser: boolean }
 
@@ -66,47 +66,47 @@ Returns: { user, isNewUser: boolean }
 
 #### 2. **Get User by Phone**
 ```
-GET /api/users/phone/:phone
+GET ${import.meta.env.VITE_API_URL}/api/users/phone/:phone
 Returns: { user } or { error }
 ```
 
 #### 3. **Update User Profile**
 ```
-PUT /api/users/:phone
+PUT ${import.meta.env.VITE_API_URL}/api/users/:phone
 Body: { name, city, platform, workerId, etc. }
 Returns: { user }
 ```
 
 #### 4. **Orders Management**
 ```
-POST /api/users/:phone/orders
+POST ${import.meta.env.VITE_API_URL}/api/users/:phone/orders
 Body: { orderId, amount, latitude, longitude, platform }
 Returns: { user }
 
-GET /api/users/:phone/orders
+GET ${import.meta.env.VITE_API_URL}/api/users/:phone/orders
 Returns: { orders: [...] }
 ```
 
 #### 5. **Payouts Management**
 ```
-POST /api/users/:phone/payouts
+POST ${import.meta.env.VITE_API_URL}/api/users/:phone/payouts
 Body: { payoutId, amount, triggeredBy }
 Returns: { user }
 
-GET /api/users/:phone/payouts
+GET ${import.meta.env.VITE_API_URL}/api/users/:phone/payouts
 Returns: { payouts: [...] }
 ```
 
 #### 6. **Plan Management**
 ```
-POST /api/users/:phone/plan
+POST ${import.meta.env.VITE_API_URL}/api/users/:phone/plan
 Body: { planName, planPrice, coverage }
 Returns: { user }
 ```
 
 #### 7. **Wallet Management**
 ```
-POST /api/users/:phone/wallet
+POST ${import.meta.env.VITE_API_URL}/api/users/:phone/wallet
 Body: { amount, reason }
 Returns: { user }
 ```
@@ -161,7 +161,7 @@ Dashboard (with all previous data)
 
 **Data Flow:**
 1. User enters phone number
-2. API calls `/api/users/register` with phone
+2. API calls `${import.meta.env.VITE_API_URL}/api/users/register` with phone
 3. If new → Ask for name and city → Save to MongoDB
 4. If existing → Load all data from MongoDB → Redirect to Dashboard
 5. All data synced between localStorage and MongoDB

@@ -15,7 +15,7 @@
 │   REGISTER PAGE                  │
 │  Step 1: Enter Phone (10 digits) │
 └──────┬───────────────────────────┘
-       │ POST /api/users/register
+       │ POST ${import.meta.env.VITE_API_URL}/api/users/register
        ↓
 ┌──────────────────────────────────────────┐
 │   MONGODB CHECK                          │
@@ -27,7 +27,7 @@
 ┌──────────────────────────────────┐
 │   REGISTER PAGE                  │
 │  Step 2: Enter Name + City       │
-│  PUT /api/users/:phone           │
+│  PUT ${import.meta.env.VITE_API_URL}/api/users/:phone           │
 └──────┬───────────────────────────┘
        │ Data saved to MongoDB ✅
        ↓
@@ -57,7 +57,7 @@
 ┌──────────────────────────────────┐
 │   PAYMENT                        │
 │  - UPI/Card/Wallet               │
-│  POST /api/users/:phone/plan     │
+│  POST ${import.meta.env.VITE_API_URL}/api/users/:phone/plan     │
 └──────┬───────────────────────────┘
        │ Plan saved to MongoDB ✅
        ↓
@@ -71,18 +71,18 @@
 └──────┬───────────────────────────┘
        │
        ├─→ ORDERS
-       │   POST /api/users/:phone/orders
+       │   POST ${import.meta.env.VITE_API_URL}/api/users/:phone/orders
        │   └─ Orders saved to MongoDB ✅
        │
        ├─→ WEATHER
        │   └─ AI analysis
        │
        ├─→ PAYOUTS
-       │   POST /api/users/:phone/payouts
+       │   POST ${import.meta.env.VITE_API_URL}/api/users/:phone/payouts
        │   └─ Payouts saved to MongoDB ✅
        │
        └─→ WALLET
-           POST /api/users/:phone/wallet
+           POST ${import.meta.env.VITE_API_URL}/api/users/:phone/wallet
            └─ Balance + topups in MongoDB ✅
 ```
 
@@ -175,7 +175,7 @@ User Collection:
 ```
 BASE_URL: http://localhost:5000/api
 
-USER ROUTES (/api/users)
+USER ROUTES (${import.meta.env.VITE_API_URL}/api/users)
 ├── POST   /register                  → Create/check user
 ├── GET    /phone/:phone              → Get user by phone
 ├── PUT    /:phone                    → Update profile
@@ -330,7 +330,7 @@ User.findOne({ phone: "9999999999" })
 ### Adding New Order
 ```
 1. User adds order for ₹450
-2. API: POST /api/users/:phone/orders
+2. API: POST ${import.meta.env.VITE_API_URL}/api/users/:phone/orders
 3. MongoDB: $push order to orders array
 4. Order saved with timestamp & location
 5. User sees order in history
