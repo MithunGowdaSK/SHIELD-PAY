@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  background: #f4f6f8;
+}
+
+/* MOBILE APP FRAME */
+#root {
+  max-width: 400px;
+  margin: auto;
+  background: #f4f6f8;
+  min-height: 100vh;
+}
