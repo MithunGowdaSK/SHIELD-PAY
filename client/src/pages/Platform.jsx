@@ -44,21 +44,22 @@ export default function Platform() {
     setLoading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("platform", selected);
-      formData.append("workerId", workerId);
-      formData.append("phone", phone);
-      formData.append("file", file);
-
-      if (coords) {
-        formData.append("latitude", coords.latitude);
-        formData.append("longitude", coords.longitude);
-      }
-
-      const res = await api.registerPlatformForm(formData);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/platform`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone,
+          platform: selected,
+          workerId,
+          latitude: coords?.latitude || null,
+          longitude: coords?.longitude || null,
+          verified: true
+        }),
+      });
 
       if (!res.ok) {
-        toast.error(res.data?.message || "Upload failed ❌");
+        const data = await res.json();
+        toast.error(data.message || "Failed ❌");
         setLoading(false);
         return;
       }
