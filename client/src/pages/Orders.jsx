@@ -49,18 +49,17 @@ export default function Orders() {
     setOrders([...data.orders]); // Update UI state
 
     // send to server for centralized storage/verification
-    fetch("http://localhost:5000/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        phone: localStorage.getItem("phone"), 
-        orderId: newOrder.id, 
-        amount: newOrder.amount, 
-        date: newOrder.date, 
-        platform: localStorage.getItem("platform") || null, 
-        latitude: newOrder.latitude, 
-        longitude: newOrder.longitude 
-      }),
+    fetch(`${import.meta.env.VITE_API_URL}/api/users/${localStorage.getItem("phone")}/orders`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ 
+    orderId: newOrder.id, 
+    amount: newOrder.amount, 
+    date: newOrder.date,   
+    platform: localStorage.getItem("platform") || null, 
+    latitude: newOrder.latitude, 
+    longitude: newOrder.longitude 
+  }),    
     }).then(() => {
       toast.success("Order added ✅");
     }).catch(() => {
