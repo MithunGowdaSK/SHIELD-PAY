@@ -3,6 +3,19 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI/180) *
+    Math.cos(lat2 * Math.PI/180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
 // ✅ REGISTER NEW USER (Phone based)
 router.post("/register", async (req, res) => {
   try {
@@ -83,21 +96,28 @@ router.get("/:id", async (req, res) => {
 // ✅ UPDATE USER PROFILE
 router.put("/:phone", async (req, res) => {
   try {
+    const { name, city, location } = req.body;
+    const updateData = {
+      updatedAt: new Date(),
+    };
+    if (name) updateData.name = name;
+    if (city) updateData.city = city;
+    // ✅ SAVE LOCATION
+    if (location && location.latitude && location.longitude) {
+      updateData.location = {
+        latitude: Number(location.latitude),
+        longitude: Number(location.longitude),
+      };
+    }
     const user = await User.findOneAndUpdate(
       { phone: req.params.phone },
-      { 
-        $set: req.body,
-        updatedAt: new Date(),
-      },
+      { $set: updateData },
       { new: true }
     );
-
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
     res.json({ message: "User updated", user });
-
   } catch (error) {
     console.error("Update user error:", error);
     res.status(500).json({ error: error.message });
@@ -159,31 +179,38 @@ router.get("/:phone/orders", async (req, res) => {
 // ✅ ADD PAYOUT
 router.post("/:phone/payouts", async (req, res) => {
   try {
-    const { payoutId, amount, triggeredBy } = req.body;
-
-    const user = await User.findOneAndUpdate(
-      { phone: req.params.phone },
-      {
-        $push: {
-          payouts: {
-            id: payoutId,
-            amount,
-            date: new Date(),
-            triggeredBy,
-            status: "pending",
-          },
-        },
-        updatedAt: new Date(),
-      },
-      { new: true }
-    );
-
+    const { payoutId, amount, triggeredBy, latitude, longitude } = req.body;
+    const user = await User.findOne({ phone: req.params.phone });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    res.json({ message: "Payout recorded", user });
-
+    // ❌ LOCATION NOT SET
+    if (!user.location) {
+      return res.status(400).json({ error: "Set your location first ❌" });
+    }
+    // 🔥 DISTANCE CHECK
+    const distance = getDistance(
+      user.location.latitude,
+      user.location.longitude,
+      Number(latitude),
+      Number(longitude)
+    );
+    console.log("Distance:", distance);
+    if (distance > 6.1) {
+      return res.status(403).json({
+        error: `Payout denied ❌ - You are ${distance.toFixed(2)} km away`,
+      });
+    }
+    // ✅ ALLOW PAYOUT
+    user.payouts.push({
+      id: payoutId,
+      amount,
+      date: new Date(),
+      triggeredBy,
+      status: "success",
+    });
+    await user.save();
+    res.json({ message: "Payout success ✅", user });
   } catch (error) {
     console.error("Add payout error:", error);
     res.status(500).json({ error: error.message });
