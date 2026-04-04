@@ -21,3 +21,28 @@ The system continuously evaluates:
 ## Decision Engine
 
 A scoring-based system determines payout eligibility:
+score = weather + income_loss + location_validity
+- High score → payout approved  
+- Low score → rejected  
+
+## Fraud Protection
+
+- User sets base location  
+- Live GPS is compared during payout  
+- If distance > 6.1 km → payout denied  
+
+## Data Handling
+
+- Each user has isolated data (orders, payouts, plans)
+- MongoDB ensures persistence
+- localStorage used for fast UI access
+
+## Key Outcome
+
+ShieldPay removes manual claims and replaces them with:
+
+👉 Automated detection  
+👉 Instant decision  
+👉 Zero-touch payouts  
+
+This transforms insurance into a real-time protection system.
