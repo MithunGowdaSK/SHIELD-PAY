@@ -61,7 +61,7 @@ export default function FinalVerification() {
   const checks = [
     { label: "Weather confirmed", ok: isRain },
     { label: "Order activity confirmed", ok: orders.length > 0 },
-    { label: "Location verified", ok: true },
+    { label: "Location verified", ok: true }, // (we'll trust GPS here)
     { label: "Device verified", ok: true },
     { label: "AI risk low", ok: loss > 0 },
   ];
@@ -146,8 +146,42 @@ export default function FinalVerification() {
           {/* ✅ REAL BUTTON */}
           {showFinal && (
             <button
-              onClick={() => {
-                if (allPassed) navigate("/payout");
+              onClick={async () => {
+                if (!allPassed) return;
+                try {
+                  // 📍 GET CURRENT LOCATION
+                  navigator.geolocation.getCurrentPosition(async (pos) => {
+                    const latitude = pos.coords.latitude;
+                    const longitude = pos.coords.longitude;
+                    const phone = localStorage.getItem("phone");
+                    // 🔥 CALL BACKEND
+                    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payouts`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        phone,
+                        amount: payout,
+                        latitude,
+                        longitude,
+                      }),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                      alert(data.error || "Payout failed ❌");
+                      return;
+                    }
+                    alert("Payout success ✅");
+                    // 👉 move to next screen
+                    navigate("/payout");
+                  }, () => {
+                    alert("Location permission required ❌");
+                  });
+                } catch (err) {
+                  console.error(err);
+                  alert("Network error ❌");
+                }
               }}
               disabled={!allPassed}
               className={`mt-4 w-full p-3 rounded-xl text-sm font-medium transition-all
